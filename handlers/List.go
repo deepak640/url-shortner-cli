@@ -18,7 +18,7 @@ func ListUrl() {
 	if Iderr != nil {
 		log.Fatal(Iderr)
 	}
-
+	ServerURL := os.Getenv("SERVER")
 	cursor, err := config.DB.Database("urlshortener").Collection("urls").Find(context.TODO(), bson.D{{Key: "user_id", Value: userId}})
 
 	if err != nil {
@@ -41,14 +41,14 @@ func ListUrl() {
 	table.SetBorder(true)
 	table.SetAlignment(tablewriter.ALIGN_LEFT)
 
+
 	for _, url := range urls {
 		table.Append([]string{
 			url.ShortCode,
-			"http://localhost:8080/" + url.ShortCode,
+			ServerURL + url.ShortCode,
 			url.LongURL,
 			url.CreatedAt.Format("2006-01-02"),
 		})
 	}
 	table.Render()
 }
-
