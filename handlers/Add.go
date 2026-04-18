@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/url"
+	"os"
 	"strings"
 
 	// "encoding/json"
@@ -15,11 +16,15 @@ import (
 	"url-shortner-cli/models"
 
 	"github.com/denisbrodbeck/machineid"
+	"github.com/joho/godotenv"
 )
 
 
 func AddURL(url string){
 
+	if err := godotenv.Load(); err != nil {
+        log.Println("No .env file found, using system environment variables")
+    }
 	userId, Iderr := machineid.ID()
 	if Iderr != nil {
 		log.Fatal(Iderr)
@@ -49,7 +54,8 @@ func AddURL(url string){
 
 
 	fmt.Println("URL added successfully !")
-	fmt.Println("http://localhost:8080/" + code)
+	Server := os.Getenv("SERVER")
+	fmt.Println(Server + code)
 }
 
 // functions

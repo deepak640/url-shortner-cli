@@ -18,6 +18,9 @@ func Connect() {
 	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found, using system environment variables")
 	}
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, using system environment variables")
+	}
 
 	mongoURI := os.Getenv("MONGO_URI")
 	if mongoURI == "" {
