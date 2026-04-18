@@ -1,19 +1,16 @@
 package handlers
 
 import (
-	"context"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io"
 	"log"
+	"math/rand"
+	"net/http"
 	"net/url"
 	"os"
 	"strings"
-
-	// "encoding/json"
-	"fmt"
-	"math/rand"
-	"time"
-
-	"url-shortner-cli/config"
-	"url-shortner-cli/models"
 
 	"github.com/denisbrodbeck/machineid"
 	"github.com/joho/godotenv"
@@ -21,41 +18,53 @@ import (
 
 
 func AddURL(url string){
+	if !IsValidHTTPSURL(url){
+		fmt.Println("Invalid URL")
+		return
+	}
 
 	if err := godotenv.Load(); err != nil {
         log.Println("No .env file found, using system environment variables")
-    }
+  }
 	userId, Iderr := machineid.ID()
 	if Iderr != nil {
 		log.Fatal(Iderr)
 	}
 
-	if !IsValidHTTPSURL(url){
-		fmt.Println("Invalid URL")
-		return
-	}
-	collection := config.DB.Database("urlshortener").Collection("urls")
-
-	code := generateCode()
-
-	doc := models.URL{
-		ShortCode: code,
-		UserID: userId,
-		LongURL: url,
-		CreatedAt: time.Now(),
-	}
-
-	_, err := collection.InsertOne(context.TODO(), doc)
-
-	if err != nil{
-		fmt.Println("Error adding URL:", err)
-		return
-	}
-
-
-	fmt.Println("URL added successfully !")
 	Server := os.Getenv("SERVER")
-	fmt.Println(Server + code)
+
+
+	data := map[string]interface{}{
+		"UserID": userId,
+		"URL": url,
+	}
+
+	jsonData, err2 := json.Marshal(data)
+
+	if err2 != nil {
+		log.Fatal(err2)
+	}
+
+	response , err3 := http.Post(Server + "shorten", "application/json", bytes.NewBuffer(jsonData))
+	if err3 != nil {
+		log.Fatal(err3)
+	}
+
+	defer response.Body.Close()
+
+	body, _ := io.ReadAll(response.Body)
+
+	if response.StatusCode < 200 || response.StatusCode >= 300 {
+		log.Fatalf("Server error (%s): %s", response.Status, string(body))
+	}
+
+	var result map[string]interface{}
+	if err := json.Unmarshal(body, &result); err != nil {
+		log.Fatalf("Error decoding JSON: %v. Raw body: %s", err, string(body))
+	}
+	fmt.Println("URL added successfully !")
+
+	fmt.Println(result["short_url"])
 }
 
 // functions

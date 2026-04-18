@@ -3,14 +3,14 @@ package main
 import (
 	"fmt"
 	"os"
-	"url-shortner-cli/config"
+
 	"url-shortner-cli/handlers"
 
 )
 
 
 func main(){
-	config.Connect()
+
 	if len(os.Args) < 2 {
 		fmt.Println("Please provide a URL")
 		return

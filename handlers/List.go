@@ -1,34 +1,59 @@
 package handlers
 
 import (
-	"context"
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io"
 	"log"
+	"net/http"
 	"os"
-	"url-shortner-cli/config"
-	"url-shortner-cli/models"
+	"text/tabwriter"
+	"time"
 
 	"github.com/denisbrodbeck/machineid"
-	"github.com/olekukonko/tablewriter"
-	"go.mongodb.org/mongo-driver/v2/bson"
+	"github.com/joho/godotenv"
 )
 
+type URLEntry struct {
+	ID        string `json:"ID"`
+	ShortCode string `json:"ShortCode"`
+	UserID    string `json:"UserID"`
+	LongURL   string `json:"LongURL"`
+	CreatedAt string `json:"CreatedAt"`
+}
+
 func ListUrl() {
-	userId, Iderr := machineid.ID()
-	if Iderr != nil {
-		log.Fatal(Iderr)
+	if err := godotenv.Load(); err != nil {
+		fmt.Println("Error loading .env file")
 	}
-	ServerURL := os.Getenv("SERVER")
-	cursor, err := config.DB.Database("urlshortener").Collection("urls").Find(context.TODO(), bson.D{{Key: "user_id", Value: userId}})
-
+	Server := os.Getenv("SERVER")
+	userId, err := machineid.ID()
 	if err != nil {
-		log.Fatal("Error listing URLs:", err)
+		fmt.Println("Error getting user ID")
 	}
-	defer cursor.Close(context.TODO())
+	data := map[string]string{
+		"UserID": userId,
+	}
 
-	var urls []models.URL
-	if err = cursor.All(context.TODO(), &urls); err != nil {
-		log.Fatal("Error decoding URLs:", err)
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		log.Fatal(err)
+	}
+	res, err := http.Post(Server+"list", "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer res.Body.Close()
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		log.Fatalf("Error reading response: %v", err)
+	}
+
+	var urls []URLEntry
+	if err := json.Unmarshal(body, &urls); err != nil {
+		log.Fatalf("Error decoding JSON: %v. Raw body: %s", err, string(body))
 	}
 
 	if len(urls) == 0 {
@@ -36,19 +61,28 @@ func ListUrl() {
 		return
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"Short Code", "Short Url", "Long Url", "Created At"})
-	table.SetBorder(true)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	const (
+		colorReset  = "\033[0m"
+		colorCyan   = "\033[36m"
+		colorYellow = "\033[33m"
+		colorBold   = "\033[1m"
+	)
 
-
-	for _, url := range urls {
-		table.Append([]string{
-			url.ShortCode,
-			ServerURL + url.ShortCode,
-			url.LongURL,
-			url.CreatedAt.Format("2006-01-02"),
-		})
+	w := tabwriter.NewWriter(os.Stdout, 0, 0, 3, ' ', 0)
+	fmt.Fprintf(w, "%s%s#\tShort Code\tLong URL\tCreated At%s\n", colorBold, colorCyan, colorReset)
+	fmt.Fprintf(w, "%s%s---\t----------\t--------\t----------%s\n", colorBold, colorCyan, colorReset)
+	for i, u := range urls {
+		createdAt := u.CreatedAt
+		if t, err := time.Parse(time.RFC3339Nano, u.CreatedAt); err == nil {
+			createdAt = t.Local().Format("02 Jan 2006, 03:04 PM")
+		}
+		fmt.Fprintf(w, "%s%d%s\t%s%s%s\t%s\t%s\n",
+			colorYellow, i+1, colorReset,
+			colorBold, u.ShortCode, colorReset,
+			u.LongURL,
+			createdAt,
+		)
 	}
-	table.Render()
+	w.Flush()
 }
+
