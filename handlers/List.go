@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/denisbrodbeck/machineid"
-	"github.com/joho/godotenv"
 )
 
 type URLEntry struct {
@@ -24,14 +23,11 @@ type URLEntry struct {
 }
 
 func ListUrl() {
-	if err := godotenv.Load(); err != nil {
-		fmt.Println("Error loading .env file")
-	}
-	Server := os.Getenv("SERVER")
 	userId, err := machineid.ID()
 	if err != nil {
-		fmt.Println("Error getting user ID")
+		log.Fatal("Error getting user ID:", err)
 	}
+
 	data := map[string]string{
 		"UserID": userId,
 	}
@@ -40,7 +36,8 @@ func ListUrl() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	res, err := http.Post(Server+"list", "application/json", bytes.NewBuffer(jsonData))
+
+	res, err := http.Post(GetServerURL()+"list", "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -85,4 +82,3 @@ func ListUrl() {
 	}
 	w.Flush()
 }
-

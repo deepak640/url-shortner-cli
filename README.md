@@ -1,59 +1,97 @@
-# URL Shortener CLI
+# 🔗 URL Shortener CLI (deepak640-url-shortener)
 
-A fast and simple command-line application built in Go to shorten URLs, list them, and remove them. The application connects to a MongoDB database to persist data and uses `tablewriter` to beautifully format terminal output.
+[![npm version](https://img.shields.io/npm/v/deepak640-url-shortener.svg)](https://www.npmjs.com/package/deepak640-url-shortener)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Features
+A fast, lightweight, and cross-platform command-line tool to shorten URLs instantly. Built with **Go** for high performance and distributed via **npm** for maximum convenience.
 
-* **Shorten URLs**: Quickly generate short aliases for any long URL.
-* **List URLs**: View all your shortened URLs in a nicely formatted terminal table.
-* **Remove URLs**: Delete specific URLs from your database when they are no longer needed.
-* **Persistent Storage**: Utilizes MongoDB for keeping your data safe and readily available.
+---
 
-## Prerequisites
+## 🚀 Quick Install
 
-Make sure you have the following installed to run this project:
+Install it globally using npm:
 
-* [Go](https://golang.org/dl/) (version 1.26+)
-* [MongoDB](https://www.mongodb.com/) (either running locally or a cloud instance like MongoDB Atlas)
+```bash
+npm install -g deepak640-url-shortener
+```
 
-## Setup & Installation
+---
 
-1. **Navigate to the project directory**:
+## 🛠️ Usage
+
+Once installed, you can use the `urlshortner` command from anywhere in your terminal.
+
+### 1. Shorten a URL
+Generate a tiny link for any `https://` address.
+```bash
+urlshortner shorten https://www.google.com
+```
+
+### 2. List your URLs
+See every URL you've shortened in a beautiful table, including timestamps.
+```bash
+urlshortner list
+```
+
+### 3. Remove a URL
+Delete a shortened link using its unique short code.
+```bash
+urlshortner remove R4anSi
+```
+
+---
+
+## ✨ Features
+
+- **Blazing Fast**: Compiled Go binaries for every platform (Mac ARM/Intel, Linux, Windows).
+- **Beautiful UI**: Colorful terminal output with clean data tables.
+- **Zero Config**: Connects to a pre-configured Vercel backend by default.
+- **Privacy Conscious**: Uses your hardware's unique MachineID to keep your links private to your device.
+- **Customizable**: Pro users can override the backend API using environment variables.
+
+---
+
+## 💻 Local Development (For Developers)
+
+If you want to run the source code directly or use a custom backend:
+
+### Prerequisites
+- [Go](https://golang.org/dl/) (version 1.20+)
+- A backend server running the [URL Shortener API](https://url-shortner-rosy-omega.vercel.app/)
+
+### Setup
+1. Clone the repo:
    ```bash
+   git clone https://github.com/deepak640/url-shortner-cli.git
    cd url-shortner-cli
    ```
-
-2. **Install Dependencies**:
-   The project uses Go Modules. Download all required dependencies by running:
+2. Install dependencies:
    ```bash
    go mod tidy
    ```
-
-3. **Environment Configuration**:
-   Create a `.env` file in the root directory of the project to store your configurations (like your MongoDB connection string).
+3. (Optional) Custom Backend:
+   Create a `.env` file in the root:
    ```env
-   MONGO_URI="mongodb://localhost:27017" # Replace with your actual Mongo URI
-   # Depending on your config, you may need other environment variables like PORT or DB_NAME
+   SERVER=http://localhost:3000/
+   ```
+4. Run:
+   ```bash
+   go run main.go list
    ```
 
-## Usage
+---
 
-You can use the CLI directly via `go run main.go` or build it into an executable.
+## 🏗️ Architecture
+This project uses a "dual-stack" approach:
+- **Core Logic**: Written in Go for raw speed and easy cross-compilation.
+- **Distribution**: Wrapped in a thin Node.js layer to allow simple installation via `npm install -g`.
 
-| Command | Syntax | Description |
-| :--- | :--- | :--- |
-| **Shorten URL** | `go run main.go shorten <url>` | Create a shortened version of a long link. |
-| **List URLs** | `go run main.go list` | View all the URLs you've shortened in an ASCII table. |
-| **Remove URL** | `go run main.go remove <url>` | Delete a URL from your database given its identifier. |
+---
 
-## Built With
+## 📄 License
 
-* **[Go](https://golang.org/)** - Core logic and CLI structure
-* **[MongoDB Go Driver](https://pkg.go.dev/go.mongodb.org/mongo-driver)** - Database connection and operations
-* **[Godotenv](https://github.com/joho/godotenv)** - Environment variable management
-* **[Tablewriter](https://github.com/olekukonko/tablewriter)** - ASCII table output generation
-* **[MachineID](https://github.com/denisbrodbeck/machineid)** - Generating unique hardware IDs
+Distributed under the MIT License. See `LICENSE` for more information.
 
-## License
+---
 
-MIT
+**Developed with ❤️ by [Deepak Negi](https://github.com/deepak640)**

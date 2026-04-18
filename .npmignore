@@ -1,0 +1,9 @@
+*.go
+go.mod
+go.sum
+handlers/
+.env
+.gitignore
+README.md
+vendor/
+.github/

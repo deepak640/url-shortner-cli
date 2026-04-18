@@ -1,0 +1,25 @@
+{
+  "name": "deepak640-url-shortener",
+  "version": "1.0.0",
+  "description": "CLI tool for shortening URLs with a fixed Vercel backend and .env support.",
+  "main": "run.js",
+  "bin": {
+    "urlshortner": "run.js"
+  },
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "files": [
+    "bin/",
+    "run.js",
+    "install.js"
+  ],
+  "author": "Deepak Negi",
+  "license": "MIT",
+  "keywords": [
+    "url",
+    "shortener",
+    "cli",
+    "go"
+  ]
+}
