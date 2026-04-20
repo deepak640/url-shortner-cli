@@ -1,6 +1,6 @@
 {
   "name": "deepak640-url-shortener",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "CLI tool for shortening URLs with a fixed Vercel backend and .env support.",
   "main": "run.js",
   "bin": {
