@@ -1,0 +1,37 @@
+name: Publish to npm
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger only when you push a tag like v1.0.1
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21' # Adjust to your Go version
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Build Multi-platform Binaries
+        run: |
+          mkdir -p bin
+          GOOS=darwin GOARCH=amd64 go build -o bin/urlshortner-darwin-amd64 .
+          GOOS=darwin GOARCH=arm64 go build -o bin/urlshortner-darwin-arm64 .
+          GOOS=linux GOARCH=amd64 go build -o bin/urlshortner-linux-amd64 .
+          GOOS=windows GOARCH=amd64 go build -o bin/urlshortner-windows-amd64.exe .
+
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
