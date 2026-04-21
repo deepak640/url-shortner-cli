@@ -18,6 +18,14 @@
   ],
   "author": "Deepak Negi",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepak640/url-shortner-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/deepak640/url-shortner-cli/issues"
+  },
+  "homepage": "https://github.com/deepak640/url-shortner-cli#readme",
   "keywords": [
     "url",
     "shortener",
