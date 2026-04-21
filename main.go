@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"flag"
 
 	"url-shortner-cli/handlers"
 )
@@ -10,19 +11,27 @@ import (
 func main() {
 	if len(os.Args) < 2 {
 		fmt.Println("Usage:")
-		fmt.Println("  urlshortner shorten <url>    Shorten a URL")
-		fmt.Println("  urlshortner list             List all your shortened URLs")
-		fmt.Println("  urlshortner remove <code>    Remove a shortened URL")
+		fmt.Println("  urlshortner shorten --url <url> [--custom <code>] [--expiry <hours>]")
+		fmt.Println("  urlshortner list")
+		fmt.Println("  urlshortner remove <code>")
 		return
 	}
 
 	switch os.Args[1] {
 	case "shorten":
-		if len(os.Args) < 3 {
-			fmt.Println("Usage: urlshortner shorten <url>")
+		shortenCmd := flag.NewFlagSet("shorten", flag.ExitOnError)
+		urlFlag := shortenCmd.String("url", "", "The URL to shorten (required)")
+		customFlag := shortenCmd.String("custom", "", "Custom short code (optional)")
+		expiryFlag := shortenCmd.Int("expiry", 0, "Expiry in hours (optional)")
+
+		shortenCmd.Parse(os.Args[2:])
+
+		if *urlFlag == "" {
+			fmt.Println("Error: --url flag is required")
+			fmt.Println("Usage: urlshortner shorten --url <url> [--custom <code>] [--expiry <hours>]")
 			return
 		}
-		handlers.AddURL(os.Args[2])
+		handlers.AddURL(*urlFlag, *customFlag, *expiryFlag)
 	case "remove":
 		if len(os.Args) < 3 {
 			fmt.Println("Usage: urlshortner remove <short-code>")

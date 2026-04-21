@@ -14,7 +14,7 @@ import (
 	"github.com/denisbrodbeck/machineid"
 )
 
-func AddURL(rawURL string) {
+func AddURL(rawURL string, customCode string, expiresIn int) {
 	if !IsValidHTTPSURL(rawURL) {
 		fmt.Println("Invalid URL. Must start with https://")
 		return
@@ -30,6 +30,14 @@ func AddURL(rawURL string) {
 		"URL":    rawURL,
 	}
 
+	if customCode != "" {
+		data["CustomCode"] = customCode
+	}
+
+	if expiresIn > 0 {
+		data["ExpiresIn"] = expiresIn
+	}
+
 	jsonData, err := json.Marshal(data)
 	if err != nil {
 		log.Fatal(err)
@@ -42,7 +50,10 @@ func AddURL(rawURL string) {
 	defer response.Body.Close()
 
 	body, _ := io.ReadAll(response.Body)
-
+	if response.StatusCode == 400 {
+		fmt.Println("Custom code already exists")
+		return
+	}
 	if response.StatusCode < 200 || response.StatusCode >= 300 {
 		log.Fatalf("Server error (%s): %s", response.Status, string(body))
 	}
