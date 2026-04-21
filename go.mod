@@ -1,4 +1,4 @@
-module url-shortner-cli
+module ziplink
 
 go 1.26.2
 

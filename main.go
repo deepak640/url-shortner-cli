@@ -5,7 +5,7 @@ import (
 	"os"
 	"flag"
 
-	"url-shortner-cli/handlers"
+	"ziplink/handlers"
 )
 
 func main() {

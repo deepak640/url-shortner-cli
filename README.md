@@ -1,6 +1,6 @@
-# 🔗 URL Shortener CLI (deepak640-url-shortener)
+# 🔗 ZipLink CLI (ziplink-cli)
 
-[![npm version](https://img.shields.io/npm/v/deepak640-url-shortener.svg)](https://www.npmjs.com/package/deepak640-url-shortener)
+[![npm version](https://img.shields.io/npm/v/ziplink-cli.svg)](https://www.npmjs.com/package/ziplink-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A fast, lightweight, and cross-platform command-line tool to shorten URLs instantly. Built with **Go** for high performance and distributed via **npm** for maximum convenience.
@@ -12,31 +12,45 @@ A fast, lightweight, and cross-platform command-line tool to shorten URLs instan
 Install it globally using npm:
 
 ```bash
-npm install -g deepak640-url-shortener
+npm install -g ziplink-cli
 ```
 
 ---
 
 ## 🛠️ Usage
 
-Once installed, you can use the `urlshortner` command from anywhere in your terminal.
+Once installed, you can use the `ziplink` command from anywhere in your terminal.
 
 ### 1. Shorten a URL
 Generate a tiny link for any `https://` address.
 ```bash
-urlshortner shorten https://www.google.com
+ziplink shorten --url https://www.google.com
 ```
 
 ### 2. List your URLs
 See every URL you've shortened in a beautiful table, including timestamps.
 ```bash
-urlshortner list
+ziplink list
 ```
 
 ### 3. Remove a URL
 Delete a shortened link using its unique short code.
 ```bash
-urlshortner remove R4anSi
+ziplink remove R4anSi
+```
+
+---
+
+## 🛠️ Command Options
+
+### `shorten`
+- `--url`: The URL to shorten (Required)
+- `--custom`: Custom short code (Optional)
+- `--expiry`: Expiry in hours (Optional, e.g., 24 for 1 day)
+
+Example with custom code and expiry:
+```bash
+ziplink shorten --url https://www.google.com --custom google --expiry 24h
 ```
 
 ---

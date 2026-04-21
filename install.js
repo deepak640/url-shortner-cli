@@ -8,11 +8,11 @@ const arch = process.arch;
 let binary = '';
 
 if (platform === 'darwin') {
-    binary = arch === 'arm64' ? 'urlshortner-darwin-arm64' : 'urlshortner-darwin-amd64';
+    binary = arch === 'arm64' ? 'ziplink-darwin-arm64' : 'ziplink-darwin-amd64';
 } else if (platform === 'linux') {
-    binary = 'urlshortner-linux-amd64';
+    binary = 'ziplink-linux-amd64';
 } else if (platform === 'win32') {
-    binary = 'urlshortner-windows-amd64.exe';
+    binary = 'ziplink-windows-amd64.exe';
 }
 
 if (binary) {
@@ -26,5 +26,5 @@ if (binary) {
         }
     }
 } else {
-    console.warn('Unsupported platform for url-shortner-cli pre-built binaries.');
+    console.warn('Unsupported platform for ziplink-cli pre-built binaries.');
 }
