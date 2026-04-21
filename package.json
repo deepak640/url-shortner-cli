@@ -1,10 +1,10 @@
 {
-  "name": "url-shortener-cli",
+  "name": "ziplink-cli",
   "version": "1.0.0",
   "description": "CLI tool for shortening URLs with a fixed Vercel backend and .env support.",
   "main": "run.js",
   "bin": {
-    "urlshortner": "run.js"
+    "ziplink": "run.js"
   },
   "scripts": {
     "postinstall": "node install.js",
