@@ -11,9 +11,9 @@ import (
 func main() {
 	if len(os.Args) < 2 {
 		fmt.Println("Usage:")
-		fmt.Println("  urlshortner shorten --url <url> [--custom <code>] [--expiry <hours>]")
-		fmt.Println("  urlshortner list")
-		fmt.Println("  urlshortner remove <code>")
+		fmt.Println("  ziplink shorten --url <url> [--custom <code>] [--expiry <hours>]")
+		fmt.Println("  ziplink list")
+		fmt.Println("  ziplink remove <code>")
 		return
 	}
 
@@ -28,13 +28,13 @@ func main() {
 
 		if *urlFlag == "" {
 			fmt.Println("Error: --url flag is required")
-			fmt.Println("Usage: urlshortner shorten --url <url> [--custom <code>] [--expiry <hours>]")
+			fmt.Println("Usage: ziplink shorten --url <url> [--custom <code>] [--expiry <hours>]")
 			return
 		}
 		handlers.AddURL(*urlFlag, *customFlag, *expiryFlag)
 	case "remove":
 		if len(os.Args) < 3 {
-			fmt.Println("Usage: urlshortner remove <short-code>")
+			fmt.Println("Usage: ziplink remove <short-code>")
 			return
 		}
 		handlers.RemoveURL(os.Args[2])
@@ -42,6 +42,6 @@ func main() {
 		handlers.ListUrl()
 	default:
 		fmt.Printf("Unknown command: %s\n", os.Args[1])
-		fmt.Println("Run `urlshortner` with no arguments to see usage.")
+		fmt.Println("Run `ziplink` with no arguments to see usage.")
 	}
 }
