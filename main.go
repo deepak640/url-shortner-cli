@@ -23,6 +23,8 @@ func main() {
 		urlFlag := shortenCmd.String("url", "", "The URL to shorten (required)")
 		customFlag := shortenCmd.String("custom", "", "Custom short code (optional)")
 		expiryFlag := shortenCmd.Int("expiry", 0, "Expiry in hours (optional)")
+		MaxClickFlag := shortenCmd.Int("clicks", 0, "Maximum clicks (optional)")
+
 
 		shortenCmd.Parse(os.Args[2:])
 
@@ -31,7 +33,7 @@ func main() {
 			fmt.Println("Usage: ziplink shorten --url <url> [--custom <code>] [--expiry <hours>]")
 			return
 		}
-		handlers.AddURL(*urlFlag, *customFlag, *expiryFlag)
+		handlers.AddURL(*urlFlag, *customFlag, *expiryFlag, *MaxClickFlag)
 	case "remove":
 		if len(os.Args) < 3 {
 			fmt.Println("Usage: ziplink remove <short-code>")
