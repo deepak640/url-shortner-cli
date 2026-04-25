@@ -15,7 +15,7 @@ import (
 	"github.com/denisbrodbeck/machineid"
 )
 
-func AddURL(rawURL string, customCode string, expiresIn int, MaxClick int) {
+func AddURL(rawURL string, customCode string, expiresIn string, MaxClick int) {
 	if !IsValidHTTPSURL(rawURL) {
 		fmt.Println("Invalid URL. Must start with https://")
 		return
@@ -39,7 +39,8 @@ func AddURL(rawURL string, customCode string, expiresIn int, MaxClick int) {
 	if MaxClick > 0 {
 		data["MaxClicks"] = strconv.Itoa(MaxClick)
 	}
-	if expiresIn > 0 {
+
+	if expiresIn != "" {
 		data["ExpiresIn"] = expiresIn
 	}
 
